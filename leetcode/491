@@ -9,3 +9,33 @@
 //来源：力扣（LeetCode）
 //链接：https://leetcode-cn.com/problems/increasing-subsequences
 //著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+class Solution {
+public:
+    vector<vector<int>> findSubsequences(vector<int>& nums) {
+        if (nums.empty()) return {};
+        vector<vector<int>> res;
+        //预处理子序列第一位，保证序列长度
+        vector<int> arr(1,0);
+        bool mark[201]={false};
+        for (int i=0; i<nums.size()-1; i++) 
+            if (!mark[nums[i]+100]) {
+                arr[0]=nums[i];
+                mark[nums[i]+100]=true;
+                dfs(nums,i+1,res,arr);
+            }
+        return res;
+    }
+private:
+    void dfs(vector<int>& nums, int index, vector<vector<int>>& res, vector<int> &arr) {
+        bool mark[201]={false};
+        for (int i=index; i<nums.size(); i++) 
+            if (!mark[nums[i]+100] && (arr.empty() || nums[i]>=arr.back())) {
+                arr.push_back(nums[i]);
+                res.push_back(arr);
+                mark[nums[i]+100]=true;
+                dfs(nums,i+1,res,arr);
+                arr.pop_back();
+                while (i<nums.size()-1 && nums[i]==nums[i+1]) i++;
+            }
+    }
+};
